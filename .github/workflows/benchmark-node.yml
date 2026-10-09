@@ -45,17 +45,18 @@ jobs:
       - name: List Files
         run: find -maxdepth 2 -ls
 
-      - uses: voidzero-dev/setup-vp@3754dd7dbdb32bd8f6d28b6043de13ad3a75f21f # v1.21.1
-        with:
-          version: '1.0.0'
-          cache: true
+      - parallel:
+          - uses: voidzero-dev/setup-vp@3754dd7dbdb32bd8f6d28b6043de13ad3a75f21f # v1.21.1
+            with:
+              version: '1.0.0'
+              cache: true
 
-      - name: Setup Rust
-        uses: oxc-project/setup-rust@3d6fb132fbe7cdcb66bf8ec193911c2945369d12 # v1.0.17
-        with:
-          tools: just
-          cache-key: release-build
-          save-cache: ${{ github.ref_name == 'main' }}
+          - name: Setup Rust
+            uses: oxc-project/setup-rust@3d6fb132fbe7cdcb66bf8ec193911c2945369d12 # v1.0.17
+            with:
+              tools: just
+              cache-key: release-build
+              save-cache: ${{ github.ref_name == 'main' }}
 
       - name: Setup Benchmark Input
         run: just setup-bench
