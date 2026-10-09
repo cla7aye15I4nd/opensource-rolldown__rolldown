@@ -374,13 +374,6 @@ impl LinkStage<'_> {
     }
 
     self.metas.par_iter_mut().for_each(|meta| {
-      // Include shims in the public interface. See internal-docs/code-splitting/implementation.md.
-      meta.resolved_exports.extend(
-        meta
-          .shimmed_missing_exports
-          .iter()
-          .map(|(name, &symbol_ref)| (name.clone(), ResolvedExport::new(symbol_ref, false))),
-      );
       let mut sorted_and_non_ambiguous_resolved_exports = vec![];
       'next_export: for (exported_name, resolved_export) in &meta.resolved_exports {
         if let Some(potentially_ambiguous_symbol_refs) =
